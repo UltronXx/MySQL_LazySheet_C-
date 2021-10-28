@@ -1,0 +1,201 @@
+
+MY LAZY SHEET
+
+==========================================================================================
+
+
+------------------------------------------------------------------------------------------
+
+INITIALISING AND DECLARING FUNCTIONS
+
+MySqlConnection sqlConn = new MySqlConnection();
+        MySqlCommand sqlCmd = new MySqlCommand();
+        DataTable sqlDt = new DataTable();
+        MySqlDataAdapter sqlDtA = new MySqlDataAdapter();
+        DataSet DS = new DataSet();
+	MySqlDataReader sqlRd;
+
+------------------------------------------------------------------------------------------
+
+CONNECTING TO DATABASE
+
+private void /* DATABASE */DB()
+        {
+            try
+            {
+                string sqlServer = "datasource = localhost; port = 3306; username = root; password = /* dataBasePassword */";
+
+                string sqlQuery = "SELECT * FROM /* dataBaseName */";
+                MySqlConnection sqlConn = new MySqlConnection(sqlServer);
+                MySqlCommand sqlCmd = new MySqlCommand(sqlQuery, sqlConn);
+                sqlConn.Open();
+
+                MySqlDataAdapter sqlDtA = new MySqlDataAdapter();
+                sqlDtA.SelectCommand = sqlCmd;
+
+                DataTable sqlDt = new DataTable();
+                sqlDtA.Fill(sqlDt);
+
+                /* dataGridViewName */.DataSource = sqlDt;
+
+                sqlConn.Close();  
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+------------------------------------------------------------------------------------------
+
+INSERTING INTO DATABASE
+
+try
+            {
+                string sqlServer = "datasource = localhost; port = 3306; username = root; password = /* dataBasePassword */";
+
+                string sqlQuery = "INSERT INTO /* dataBaseName.tableName */ (/* dataBaseTableName1 */, /* dataBaseTableName2 */, /* dataBaseTableName3 */)" +
+                    "values('" + /* textBoxName1 */.Text + "'," +
+                            "'" + /* textBoxName2 */.Text + "'," +
+                            "'" + /* textBoxName3 */.Text + "'," +
+                            "'" + /* textBoxName4 */.Text +"');";
+                
+                MySqlConnection sqlConn = new MySqlConnection(sqlServer);
+                
+                MySqlCommand sqlCmd = new MySqlCommand(sqlQuery, sqlConn);
+                MySqlDataReader sqlRd;
+
+                sqlConn.Open();
+                sqlRd = sqlCmd.ExecuteReader();
+                // MessageBox.Show("Message");
+
+                sqlConn.Close();
+                /* DATABASE */DB();
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+------------------------------------------------------------------------------------------
+
+UPDATING DATABASE
+
+try
+            {
+                string sqlServer = "datasource = localhost; port = 3306; username = root; password = /* dataBasePassword */";
+
+                string sqlQuery = "UPDATE /* dataBaseName.tableName */ SET /* dataBaseTableName1 */  = '" + /* textBoxName1 */.Text + "'," +
+                                                            "/* dataBaseTableName2 */ ='" + /* textBoxName2 */.Text + "'," +
+                                                            "/* dataBaseTableName3 */ ='" + /* textBoxName3 */.Text + "'," +
+                                                            "/* dataBaseTableName4 */ ='" + /* textBoxName4 */.Text +
+                                                            "' WHERE /* dataBaseTableName1 */  = '" + /* textBoxName1 */.Text + "';";
+                
+                MySqlConnection sqlConn = new MySqlConnection(sqlServer);
+                MySqlCommand sqlCmd = new MySqlCommand(sqlQuery, sqlConn);
+                MySqlDataReader sqlRd;
+
+                sqlConn.Open();
+                sqlRd = sqlCmd.ExecuteReader();
+                
+                // MessageBox.Show("Message");
+                sqlConn.Close();
+
+                /* DATABASE */DB();
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+------------------------------------------------------------------------------------------
+
+DATA GRID VIEW - CELL CLICK
+
+try
+            {
+                /* textBoxName1 */.Text = /* dataGridViewName */.SelectedRows[0].Cells[0].Value.ToString();
+                /* textBoxName2 */.Text = /* dataGridViewName */.SelectedRows[0].Cells[1].Value.ToString();
+                /* textBoxName3 */.Text = /* dataGridViewName */.SelectedRows[0].Cells[2].Value.ToString();
+                /* textBoxName4 */.Text = /* dataGridViewName */.SelectedRows[0].Cells[3].Value.ToString();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+------------------------------------------------------------------------------------------
+
+DELETING FROM DATABASE
+
+try
+            {
+                string sqlServer = "datasource = localhost; port = 3306; username = root; password = /* dataBasePassword */";
+
+                string sqlQuery = "DELETE FROM /* dataBaseName.tableName */ WHERE /* dataBaseTableName1 */ = '" + /* textBoxName1 */.Text + "';";
+
+                MySqlConnection sqlConn = new MySqlConnection(sqlServer);
+                MySqlCommand sqlCmd = new MySqlCommand(sqlQuery, sqlConn);
+                MySqlDataReader sqlRd;
+
+                sqlConn.Open();
+                sqlRd = sqlCmd.ExecuteReader();
+
+                // MessageBox.Show("Message");
+
+                foreach (DataGridViewRow item in /* dataGridViewName */.SelectedRows)
+                {
+                    /* dataGridViewName */.Rows.RemoveAt(item.Index);
+                }
+
+                sqlConn.Close();
+                upLoadData();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+------------------------------------------------------------------------------------------
+
+READING FROM DATABASE
+
+MySqlCommand sqlCmd = new MySqlCommand("SELECT * FROM /* dataBaseName.tableName */ WHERE /* dataBaseTableName1 */ = '" +
+			/* textBoxName1 */.Text + "' AND /* dataBaseTableName2 */ = '" + /* textBoxName2 */.Text + "';", sqlConn);
+
+			try
+			{
+				sqlConn.ConnectionString = "datasource = localhost; port = 3306; username = root; password = /* dataBasePassword */";
+				sqlConn.Open();
+				sqlRd = sqlCmd.ExecuteReader();
+
+				int count = 0;
+
+				while (sqlRd.Read())
+				{
+					count += 1;
+				}
+
+				if (count == 1)
+				{
+					MessageBox.Show("/* Correct credentials message */");
+					this.Close();
+				}
+				else if (count > 1)
+				{
+					MessageBox.Show("/* Duplicate credentials message */");
+					this.Close();
+				}
+				else
+					MessageBox.Show("/* Incorrect credentials message */");
+
+				sqlConn.Close();
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message);
+			}
+
+------------------------------------------------------------------------------------------
